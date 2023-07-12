@@ -1,0 +1,62 @@
+.main-div{
+    height: 100vh;
+    background-image: url('../images/lakshman\ kumar.jpg');
+    background-position: center;
+    background-size: cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Inconsolata', monospace;
+}
+.main-div-signup{
+    height: 100vh;
+    background-image: url('../images/lakshman\ kumar.jpg');
+    background-position: center;
+    background-size: cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Inconsolata', monospace;
+}
+.login-content{
+    margin-left: 800PX;
+    margin-bottom: 225PX;
+    color: rgb(7, 7, 7);
+}
+.login-input{
+    display: flex;
+    flex-direction: column;
+}
+.input-field{
+    height: 40px;
+    width: 350px;
+    color: rgb(0, 0, 0);
+    margin-top: 30px;
+    background: transparent;
+    border: 2px solid rgb(0, 0, 0);
+    border-radius: 3px;
+    padding-left: 20px;
+    outline: none;
+}
+.input-field::placeholder{
+    color: rgb(0, 0, 0);
+}
+
+.signup-navi{
+    display: flex;
+    justify-content: space-between;
+}
+.login-btn{
+    margin-top: 30px;
+    color: rgb(246, 6, 6);
+    font-size: large;
+    font-weight: bold;
+    background: transparent;
+    border: 2px solid #040404;
+    height: 40px;
+    cursor: pointer;
+}
+.lo-sign{
+    color: rgb(246, 7, 7);
+    text-decoration: none;
+}

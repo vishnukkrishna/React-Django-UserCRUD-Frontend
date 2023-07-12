@@ -1,22 +1,29 @@
+import React from "react";
 import "./App.css";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import LoginPage from "./pages/LoginPage";
+import HomePage from "./pages/HomePage";
+import SignupPage from "./pages/SignupPage";
+import PrivateRoute from "./utils/PrivateRoute";
+import AddUserPage from "./pages/AddUserPage";
+import UpdateUserPage from "./pages/UpdateUserPage";
+import UserProfilePage from "./pages/UserProfilePage";
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src="" className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Router>
+        <Routes>
+          <Route path="/" exact element={<PrivateRoute />}>
+            <Route path="/" exact element={<HomePage />} />
+          </Route>
+          <Route Component={LoginPage} path="/login" />
+          <Route Component={SignupPage} path="/signup" />
+          <Route Component={AddUserPage} path="/add-user" />
+          <Route Component={UpdateUserPage} path="/update-user/:user_id" />
+          <Route Component={UserProfilePage} path="/user-profile" />
+        </Routes>
+      </Router>
     </div>
   );
 }
