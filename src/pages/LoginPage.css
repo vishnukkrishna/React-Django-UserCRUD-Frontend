@@ -1,6 +1,6 @@
 .main-div{
     height: 100vh;
-    background-image: url('../images/lakshman\ kumar.jpg');
+    background-image: url('../images/new2.jpg');
     background-position: center;
     background-size: cover;
     display: flex;
@@ -10,7 +10,7 @@
 }
 .main-div-signup{
     height: 100vh;
-    background-image: url('../images/lakshman\ kumar.jpg');
+    background-image: url('../images/new1.jpg');
     background-position: center;
     background-size: cover;
     display: flex;
@@ -34,7 +34,7 @@
     margin-top: 30px;
     background: transparent;
     border: 2px solid rgb(0, 0, 0);
-    border-radius: 3px;
+    border-radius: 10px;
     padding-left: 20px;
     outline: none;
 }
@@ -54,6 +54,7 @@
     background: transparent;
     border: 2px solid #040404;
     height: 40px;
+    /* border-radius: 10px; */
     cursor: pointer;
 }
 .lo-sign{

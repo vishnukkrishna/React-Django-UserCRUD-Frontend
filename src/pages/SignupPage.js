@@ -46,22 +46,25 @@ function SignupPage() {
             className="input-field"
             type="text"
             name="username"
-            placeholder="username"
+            placeholder="Username"
             onChange={(e) => setUsername(e.target.value)}
+            required
           />
           <input
             className="input-field"
             type="email"
             name="email"
-            placeholder="email"
+            placeholder="Email"
             onChange={(e) => setEmail(e.target.value)}
+            required
           />
           <input
             className="input-field"
             type="password"
             name="password"
-            placeholder="password"
+            placeholder="Password"
             onChange={(e) => setPassword(e.target.value)}
+            required
           />
           <input className="login-btn" type="submit" value="SIGNUP" />
           <div className="signup-navi">

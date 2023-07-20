@@ -45,13 +45,15 @@ function LoginPage() {
             className="input-field"
             type="email"
             name="username"
-            placeholder="email"
+            placeholder="Email"
+            required
           />
           <input
             className="input-field"
             type="password"
             name="password"
-            placeholder="password"
+            placeholder="Password"
+            required
           />
           <input className="login-btn" type="submit" value="LOGIN" />
           <div className="signup-navi">
