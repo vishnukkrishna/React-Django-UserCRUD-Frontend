@@ -10,18 +10,18 @@ import "./AdminSidebar.css";
 
 function AdminDashboard() {
   const [userList, setUserList] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const recordsPerPage = 4;
 
   useEffect(() => {
     async function getUserList() {
       const response = await axios.get(
         "http://localhost:8000/api/class-userlist/"
       );
-      // console.log(request.data.username);
       setUserList(response.data);
     }
     getUserList();
   }, []);
-  // console.log(userList);
 
   const handleDelete = (id) => {
     Swal.fire({
@@ -34,41 +34,53 @@ function AdminDashboard() {
       confirmButtonText: "Yes, delete it!",
     }).then((result) => {
       if (result.isConfirmed) {
-        const user = axios
+        axios
           .delete(`http://localhost:8000/api/user-delete/${id}/`)
-          .then(async function getUserList() {
-            const request = await axios.get(
-              "http://localhost:8000/api/user-list/"
+          .then(() => {
+            const updatedUserList = userList.filter((user) => user.id !== id);
+            setUserList(updatedUserList);
+            Swal.fire("Deleted!", "Your file has been deleted.", "success");
+          })
+          .catch((error) => {
+            console.error("Error deleting user:", error);
+            Swal.fire(
+              "Error",
+              "An error occurred while deleting the user.",
+              "error"
             );
-            // console.log(request.data.username);
-            setUserList(request.data);
           });
-        Swal.fire("Deleted!", "Your file has been deleted.", "success");
       }
     });
   };
 
-  async function serachUser(keyword) {
-    const request = await axios.get(
+  async function searchUser(keyword) {
+    const response = await axios.get(
       `http://localhost:8000/api/class-userlist/?search=${keyword}`
     );
-    console.log(request.data);
-    if (request.data.length === 0) {
+    setUserList(response.data);
+    if (response.data.length === 0) {
       toast.error("No users found");
     }
-    setUserList(request.data);
   }
+
+  // Get the current records based on the current page
+  const indexOfLastRecord = currentPage * recordsPerPage;
+  const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
+  const currentRecords = userList.slice(indexOfFirstRecord, indexOfLastRecord);
+
+  // Change page
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   return (
     <div className="dashboard-div">
-      <Toaster position="top-center" reverseOrder="false"></Toaster>
+      <Toaster position="top-center" reverseOrder={false}></Toaster>
       <div className="header-div">
         <h1>Dashboard</h1>
         <input
           className="user-search"
           type="text"
           placeholder="Search User"
-          onChange={(e) => serachUser(e.target.value)}
+          onChange={(e) => searchUser(e.target.value)}
         />
       </div>
       <div className="table-div">
@@ -80,13 +92,13 @@ function AdminDashboard() {
             <th>Email</th>
             <th className="action-col">Actions</th>
           </tr>
-          {userList.map((user) => (
-            <tr>
+          {currentRecords.map((user) => (
+            <tr key={user.id}>
               <td>{user.id}</td>
               <td>{user.username}</td>
               <td>{user.email}</td>
               <td className="action-col" style={{ display: "flex" }}>
-                <Link className="action-text" to={`/update-user/` + user.id}>
+                <Link className="action-text" to={`/update-user/${user.id}`}>
                   <p className="edit">
                     <FaEdit /> Edit
                   </p>
@@ -98,6 +110,22 @@ function AdminDashboard() {
             </tr>
           ))}
         </table>
+        {/* Pagination */}
+        <div className="pagination">
+          {Array.from({
+            length: Math.ceil(userList.length / recordsPerPage),
+          }).map((_, index) => (
+            <button
+              key={index}
+              className={`pagination-btn ${
+                index + 1 === currentPage ? "active" : ""
+              }`}
+              onClick={() => paginate(index + 1)}
+            >
+              {index + 1}
+            </button>
+          ))}
+        </div>
       </div>
     </div>
   );
