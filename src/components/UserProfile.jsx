@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-
 import { getLocal } from "../helpers/auth";
 import jwt_decode from "jwt-decode";
-
 import profile from "../images/profile.png";
 import { SlUserFollow } from "react-icons/sl";
 import { AiFillPlusCircle } from "react-icons/ai";
@@ -13,8 +11,9 @@ import { useNavigate } from "react-router-dom";
 
 function UserProfile() {
   const { user_id } = jwt_decode(getLocal());
-  const [profile_img, setImage] = useState();
-  const [password, setPassword] = useState();
+  const [profile_img, setProfileImg] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [uploadError, setUploadError] = useState(null);
 
   const history = useNavigate();
 
@@ -23,44 +22,72 @@ function UserProfile() {
     email: "",
     profile_img: "",
   });
+
   useEffect(() => {
     async function getUser() {
-      const user = await axios.get(
-        `http://localhost:8000/api/user-update/${user_id}/`
-      );
-      setUser(user.data);
+      try {
+        const response = await axios.get(
+          `http://localhost:8000/api/user-update/${user_id}/`
+        );
+        setUser(response.data);
+      } catch (error) {
+        console.error("Error fetching user profile:", error);
+        // Handle the error or redirect to an error page if needed
+      }
     }
     getUser();
-  }, []);
-  // console.log('profile', user.profile_img);
+  }, [user_id]);
+
+  const handleImageChange = (e) => {
+    const selectedImage = e.target.files[0];
+    setProfileImg(selectedImage);
+  };
+
+  const updateProfile = async (e) => {
+    e.preventDefault();
+
+    if (!profile_img) {
+      return; // Do nothing if there's no new image selected
+    }
+
+    const formData = new FormData();
+    formData.append("profile_img", profile_img);
+
+    setIsSubmitting(true);
+    setUploadError(null);
+
+    try {
+      const response = await axios.post(
+        `http://localhost:8000/api/user-update-form/${user_id}/`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      const updatedUser = { ...user, profile_img: response.data.profile_img };
+      setUser(updatedUser);
+
+      setIsSubmitting(false);
+    } catch (error) {
+      console.error("Error updating profile picture:", error);
+      setUploadError("Failed to update profile picture.");
+      setIsSubmitting(false);
+    }
+  };
 
   const logout = () => {
     localStorage.removeItem("authToken");
     history("/login");
   };
 
-  const updateProfile = async (e) => {
-    e.preventDefault();
-
-    const formData = new FormData();
-    formData.append("profile_img", profile_img);
-
-    const response = await fetch(
-      `http://localhost:8000/api/user-update-form/${user_id}/`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "multipart/form-data" },
-        body: formData,
-      }
-    );
-    console.log("image", profile_img, "user", user.username);
-  };
   return (
-    // <div className='user-main-div'>
     <div className="sub-section">
       <div className="sub-one">
         <img
-          className="profile-pic"
+          className="profile-pic rounded"
           src={
             user.profile_img
               ? "http://localhost:8000" + user.profile_img
@@ -69,15 +96,22 @@ function UserProfile() {
           alt=""
         />
         <form onSubmit={updateProfile}>
+          <label htmlFor="profile_img" className="file-label">
+          </label>
           <input
             type="file"
+            id="profile_img"
             name="profile_img"
-            onChange={(e) => setImage(e.target.files[0].name)}
+            onChange={handleImageChange}
           />
-
-          <input type="submit" className="img-upload" value="upload img" />
+          <input
+            type="submit"
+            className="img-upload"
+            value={isSubmitting ? "Uploading..." : "Upload Image"}
+            disabled={isSubmitting}
+          />
         </form>
-
+        {uploadError && <p className="error">{uploadError}</p>}
         <h2>{user.username}</h2>
         <h3>{user.email}</h3>
         <p className="about">
@@ -99,7 +133,6 @@ function UserProfile() {
         </h3>
       </div>
     </div>
-    // </div>
   );
 }
 

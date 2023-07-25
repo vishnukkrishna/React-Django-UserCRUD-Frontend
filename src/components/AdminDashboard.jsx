@@ -63,7 +63,6 @@ function AdminDashboard() {
     }
   }
 
-  // Get the current records based on the current page
   const indexOfLastRecord = currentPage * recordsPerPage;
   const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
   const currentRecords = userList.slice(indexOfFirstRecord, indexOfLastRecord);
