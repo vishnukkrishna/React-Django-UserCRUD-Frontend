@@ -11,7 +11,7 @@ function AddUser() {
   const addUser = async (e) => {
     e.preventDefault();
 
-    const user = await fetch("http://localhost:8000/api/register", {
+    const user = await fetch("http://localhost:8000/api/register/", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -21,7 +21,7 @@ function AddUser() {
       }),
     });
 
-    await history("/");
+    history("/");
   };
 
   return (

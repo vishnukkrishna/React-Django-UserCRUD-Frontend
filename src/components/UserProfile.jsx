@@ -96,8 +96,7 @@ function UserProfile() {
           alt=""
         />
         <form onSubmit={updateProfile}>
-          <label htmlFor="profile_img" className="file-label">
-          </label>
+          <label htmlFor="profile_img" className="file-label"></label>
           <input
             type="file"
             id="profile_img"
